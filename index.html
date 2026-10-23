@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A birthday wish, just for you ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  :root{--night:#0f0b2a;--rose:#e58fa8;--petal:#ffc9d6;--gold:#f0cf9e;--ivory:#fff3ee}
+  *{box-sizing:border-box}
+  html{min-height:100%}
+  body{
+    margin:0;min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, #3b2a8a 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 110%, #5e1a3d 0%, transparent 55%),
+      var(--night);
+    background-attachment:fixed;
+    color:var(--ivory);
+    font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    display:flex;align-items:center;justify-content:center;
+    overflow-x:hidden;padding:28px 18px;
+  }
+  .star{position:fixed;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.6;animation:tw 3s ease-in-out infinite;pointer-events:none}
+  @keyframes tw{50%{opacity:.1}}
+  .petal{position:fixed;top:-40px;pointer-events:none;color:var(--petal);opacity:0;animation:fall linear infinite}
+  @keyframes fall{0%{transform:translateY(-5vh) rotate(0);opacity:0}10%{opacity:.6}90%{opacity:.4}100%{transform:translateY(110vh) translateX(40px) rotate(360deg);opacity:0}}
+
+  .stage{width:min(580px,100%);text-align:center;position:relative;z-index:1;margin:auto}
+  h1{font-family:"Pinyon Script","Snell Roundhand",cursive;font-weight:400;font-size:clamp(42px,11vw,70px);line-height:1.1;margin:0 0 4px;color:var(--petal)}
+  .sub{font-style:italic;font-size:clamp(20px,4.5vw,24px);color:var(--gold);margin:0 0 12px}
+  .msg{font-size:clamp(19px,4.2vw,22px);line-height:1.6;margin:0 0 14px;font-style:italic}
+
+  #cake{width:min(320px,80vw);height:auto;display:block;margin:0 auto}
+  .flame{cursor:pointer;transform-box:fill-box;transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+  .flame:nth-of-type(2){animation-delay:-.2s}.flame:nth-of-type(3){animation-delay:-.35s}
+  @keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.08) rotate(3deg)}}
+  .flame.out{animation:none;opacity:0;transition:opacity .4s}
+
+  button{font-family:inherit;font-size:20px;font-weight:500;padding:13px 28px;border-radius:999px;cursor:pointer;border:1px solid var(--gold);color:var(--ivory);background:transparent;
+    transition:transform .25s ease,left .35s cubic-bezier(.3,1.4,.5,1),top .35s cubic-bezier(.3,1.4,.5,1)}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+  .primary{background:linear-gradient(135deg,#f3a7bb,#d9607f);color:#2b0e22;border-color:transparent;box-shadow:0 8px 26px rgba(217,96,127,.45)}
+  .hint{min-height:1.5em;margin-top:14px;font-size:18px;font-style:italic;color:var(--rose)}
+
+  #letterView{display:none}
+  .opened #cakeView{display:none}
+  .opened #letterView{display:block;animation:rise .9s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .letter{padding:clamp(26px,6vw,46px) clamp(18px,5vw,44px);border:1px solid rgba(240,207,158,.45);outline:1px solid rgba(240,207,158,.18);outline-offset:7px;
+    background:linear-gradient(160deg,rgba(36,26,92,.78),rgba(15,11,42,.88));border-radius:4px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .pill{display:inline-block;padding:6px 18px;border:1px solid rgba(240,207,158,.5);border-radius:999px;font-size:18px;color:var(--gold);margin:4px 0 18px;font-style:italic}
+
+  .together{margin:22px 0 8px}
+  .together .cap{font-family:"Pinyon Script",cursive;font-size:clamp(26px,6vw,32px);color:var(--petal);margin:0 0 4px}
+  .together .since{font-style:italic;font-size:18px;color:var(--gold);margin:0 0 12px}
+  .clock{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .clock div{border:1px solid rgba(240,207,158,.35);border-radius:6px;padding:10px 2px;background:rgba(255,255,255,.04)}
+  .clock b{display:block;font-size:clamp(26px,7vw,36px);font-weight:500;color:var(--ivory);font-variant-numeric:tabular-nums}
+  .clock span{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose)}
+  .worth{font-style:italic;font-size:clamp(19px,4.2vw,22px);margin:14px 0 6px}
+
+  .wishes{list-style:none;padding:0;margin:20px auto 22px;max-width:440px;font-size:clamp(18px,4vw,21px);line-height:1.5}
+  .wishes li{margin:8px 0}
+  .wishes li::before{content:"♥ ";color:var(--rose);font-size:.8em}
+  .ask{font-size:clamp(22px,5vw,27px);margin:6px 0 18px;color:var(--gold);font-weight:500;line-height:1.3}
+  .buttons{display:flex;gap:18px;justify-content:center;align-items:center;min-height:64px;flex-wrap:wrap}
+  #no{z-index:5}
+  .sign{font-family:"Pinyon Script",cursive;font-size:34px;color:var(--petal);margin:18px 0 0}
+  #final{display:none}
+  .answered #askBlock{display:none}
+  .answered #final{display:block;animation:rise .9s ease both}
+
+  canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
+  @media (prefers-reduced-motion:reduce){.flame,.star,.petal{animation:none}button{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<main class="stage" id="stage">
+
+  <section id="cakeView">
+    <h1 id="title"></h1>
+    <p class="sub">I couldn’t wait. Make a wish, then blow out the candles.</p>
+
+    <svg id="cake" viewBox="0 0 300 250" role="img" aria-label="Birthday cake with three candles">
+      <ellipse cx="150" cy="234" rx="135" ry="12" fill="#1a1347"/>
+      <rect x="45" y="152" width="210" height="78" rx="12" fill="#e58fa8"/>
+      <path d="M45 164 q15 24 30 0 q15 24 30 0 q15 24 30 0 q15 24 30 0 q15 24 30 0 q15 24 30 0 q15 24 30 0 z" fill="#fff3ee"/>
+      <rect x="85" y="102" width="130" height="52" rx="10" fill="#f0cf9e"/>
+      <path d="M85 112 q13 22 26 0 q13 22 26 0 q13 22 26 0 q13 22 26 0 q13 22 26 0 z" fill="#fff3ee"/>
+      <rect x="118" y="64" width="8" height="40" rx="2" fill="#ffc9d6"/>
+      <rect x="146" y="64" width="8" height="40" rx="2" fill="#ffc9d6"/>
+      <rect x="174" y="64" width="8" height="40" rx="2" fill="#ffc9d6"/>
+      <g class="flame"><ellipse cx="122" cy="52" rx="6" ry="12" fill="#ffb347"/><ellipse cx="122" cy="55" rx="3" ry="6" fill="#fff3b0"/></g>
+      <g class="flame"><ellipse cx="150" cy="52" rx="6" ry="12" fill="#ffb347"/><ellipse cx="150" cy="55" rx="3" ry="6" fill="#fff3b0"/></g>
+      <g class="flame"><ellipse cx="178" cy="52" rx="6" ry="12" fill="#ffb347"/><ellipse cx="178" cy="55" rx="3" ry="6" fill="#fff3b0"/></g>
+    </svg>
+
+    <button id="blow" class="primary" type="button">Blow out the candles</button>
+    <p class="hint" id="cakeHint">Or tap each flame</p>
+  </section>
+
+  <section id="letterView">
+    <div class="letter">
+      <h1 id="title2"></h1>
+      <p class="sub" id="to"></p>
+      <div class="pill" id="countdown"></div>
+
+      <p class="msg" id="m1"></p>
+      <p class="msg" id="m2"></p>
+
+      <div class="together">
+        <p class="cap">Every second with you</p>
+        <p class="since" id="since"></p>
+        <div class="clock">
+          <div><b id="cd">0</b><span>days</span></div>
+          <div><b id="ch">0</b><span>hours</span></div>
+          <div><b id="cm">0</b><span>mins</span></div>
+          <div><b id="cs">0</b><span>secs</span></div>
+        </div>
+        <p class="worth" id="worth"></p>
+      </div>
+
+      <ul class="wishes" id="wishes"></ul>
+
+      <div id="askBlock">
+        <p class="ask" id="askText"></p>
+        <div class="buttons">
+          <button id="yes" class="primary" type="button">Always</button>
+          <button id="no" type="button">No</button>
+        </div>
+        <p class="hint" id="hint" aria-live="polite"></p>
+      </div>
+
+      <div id="final">
+        <p class="msg" id="finalMsg"></p>
+        <p class="sign" id="sign"></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ===== EDIT THIS PART ===== */
+const CONFIG = {
+  hisName: "Dinesh",
+  yourName: "Sneha",
+  birthdayMonth: 10,            // October
+  birthdayDay: 28,
+  startDate: new Date(2026, 5, 25, 0, 0, 0),   // 25 June 2026 (month is 0-based: 5 = June)
+  sinceText: "Since 25 June 2026",
+  message1: "Since the 25th of June, my favourite place in the whole world has been right beside you.",
+  message2: "You turned ordinary days into the ones I want to keep forever, and I wanted to be the first to tell you how loved you are.",
+  worth: "Every second I’ve spent with you has been worth it, and I would choose each one again.",
+  wishes: [
+    "May the year ahead hold you gently and spoil you endlessly.",
+    "May every dream you carry find its way to you.",
+    "May I be the one standing beside you for every one of them."
+  ],
+  question: "Will you let me be your favourite person for every birthday to come?",
+  finalMessage: "I can’t wait to celebrate you properly on the day. Until then, know that you are loved, more than words, and more than seconds can count.",
+  noLabels: ["No", "Really?", "Think again…", "Wrong answer 😉", "Too slow!", "You can’t catch me", "Just say yes ♥", "Okay, okay…"],
+  hints: ["", "Hmm, that button moved…", "It really doesn’t want to be clicked.", "Your heart already knows the answer.", "Birthday boys don’t get to say no.", "The yes button keeps growing, you know."]
+};
+/* ========================== */
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+
+/* days until birthday */
+const now0 = new Date();
+const today0 = new Date(now0.getFullYear(), now0.getMonth(), now0.getDate());
+let bday = new Date(now0.getFullYear(), CONFIG.birthdayMonth - 1, CONFIG.birthdayDay);
+if (bday < today0) bday = new Date(now0.getFullYear() + 1, CONFIG.birthdayMonth - 1, CONFIG.birthdayDay);
+const left = Math.round((bday - today0) / 864e5);
+const isToday = left === 0;
+
+$("title").textContent = $("title2").textContent = isToday ? "Happy Birthday" : "Happy Early Birthday";
+document.title = (isToday ? "Happy Birthday, " : "Happy Early Birthday, ") + CONFIG.hisName + " ♥";
+$("to").textContent = "to " + CONFIG.hisName;
+$("countdown").textContent = isToday ? "Today is your day ♥" : left === 1 ? "Tomorrow is your birthday ♥" : left + " days until your birthday ♥";
+$("m1").textContent = CONFIG.message1;
+$("m2").textContent = CONFIG.message2;
+$("since").textContent = CONFIG.sinceText;
+$("worth").textContent = CONFIG.worth;
+$("askText").textContent = CONFIG.question;
+$("finalMsg").textContent = CONFIG.finalMessage;
+$("sign").textContent = "Forever yours, " + CONFIG.yourName;
+CONFIG.wishes.forEach(w => { const li = document.createElement("li"); li.textContent = w; $("wishes").appendChild(li); });
+
+/* live "time together" counter */
+function tickClock() {
+  let s = Math.max(0, Math.floor((Date.now() - CONFIG.startDate) / 1000));
+  const d = Math.floor(s / 86400); s -= d * 86400;
+  const h = Math.floor(s / 3600); s -= h * 3600;
+  const m = Math.floor(s / 60); s -= m * 60;
+  $("cd").textContent = d; $("ch").textContent = pad(h); $("cm").textContent = pad(m); $("cs").textContent = pad(s);
+}
+tickClock(); setInterval(tickClock, 1000);
+
+/* stars and petals */
+for (let i = 0; i < 40; i++) {
+  const s = document.createElement("span");
+  s.className = "star";
+  s.style.left = Math.random() * 100 + "vw"; s.style.top = Math.random() * 100 + "vh";
+  s.style.animationDelay = -Math.random() * 3 + "s";
+  document.body.appendChild(s);
+}
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement("span");
+    p.className = "petal";
+    p.textContent = Math.random() > .5 ? "♥" : "❀";
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.fontSize = 12 + Math.random() * 16 + "px";
+    p.style.animationDuration = 9 + Math.random() * 10 + "s";
+    p.style.animationDelay = -Math.random() * 15 + "s";
+    document.body.appendChild(p);
+  }
+}
+
+/* confetti */
+const cv = $("confetti"), cx = cv.getContext("2d");
+let parts = [], running = false;
+function size() { cv.width = innerWidth; cv.height = innerHeight; }
+size(); addEventListener("resize", size);
+function confetti(n = 160) {
+  const colors = ["#ffc9d6", "#e58fa8", "#f0cf9e", "#ffb347", "#ffffff", "#9d8cff"];
+  for (let i = 0; i < n; i++) parts.push({
+    x: innerWidth / 2, y: innerHeight / 2,
+    vx: (Math.random() - .5) * 16, vy: Math.random() * -14 - 3,
+    s: 5 + Math.random() * 7, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+    c: colors[i % colors.length], life: 0
+  });
+  if (!running) { running = true; requestAnimationFrame(tick); }
+}
+function tick() {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  parts.forEach(p => {
+    p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+    cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore();
+  });
+  parts = parts.filter(p => p.y < cv.height + 20 && p.life < 300);
+  if (parts.length) requestAnimationFrame(tick); else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
+}
+
+/* candles */
+const flames = [...document.querySelectorAll(".flame")];
+let opened = false;
+function check() {
+  const lit = flames.filter(f => !f.classList.contains("out")).length;
+  if (lit === 0 && !opened) {
+    opened = true;
+    $("cakeHint").textContent = "Your wish is on its way ♥";
+    confetti();
+    setTimeout(() => { $("stage").classList.add("opened"); confetti(120); window.scrollTo(0, 0); }, 1100);
+  } else if (lit > 0) {
+    $("cakeHint").textContent = lit + (lit === 1 ? " candle" : " candles") + " left…";
+  }
+}
+flames.forEach(f => f.addEventListener("click", () => { f.classList.add("out"); check(); }));
+$("blow").addEventListener("click", () => {
+  flames.forEach((f, i) => setTimeout(() => { f.classList.add("out"); check(); }, i * 350));
+});
+
+/* runaway No button */
+const yes = $("yes"), no = $("no"), hint = $("hint");
+let tries = 0, lastMove = 0;
+const overlap = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+
+function dodge(e) {
+  if (e && e.cancelable) e.preventDefault();
+  const now = Date.now();
+  if (now - lastMove < 180) return;
+  lastMove = now; tries++;
+  no.style.position = "fixed";
+  const w = no.offsetWidth, h = no.offsetHeight, m = 14, yr = yes.getBoundingClientRect();
+  let x, y, n = 0;
+  do {
+    x = m + Math.random() * Math.max(1, innerWidth - w - m * 2);
+    y = m + Math.random() * Math.max(1, innerHeight - h - m * 2);
+    n++;
+  } while (n < 25 && overlap({ left: x - 20, right: x + w + 20, top: y - 20, bottom: y + h + 20 }, yr));
+  no.style.left = x + "px"; no.style.top = y + "px";
+  no.textContent = CONFIG.noLabels[Math.min(tries, CONFIG.noLabels.length - 1)];
+  hint.textContent = CONFIG.hints[Math.min(Math.floor(tries / 2), CONFIG.hints.length - 1)];
+  yes.style.transform = "scale(" + (1 + Math.min(tries, 12) * 0.07) + ")";
+}
+["pointerenter", "pointerdown", "touchstart", "click", "focus"].forEach(ev => no.addEventListener(ev, dodge, { passive: false }));
+document.addEventListener("pointermove", e => {
+  if (e.pointerType === "touch" || !$("stage").classList.contains("opened")) return;
+  const r = no.getBoundingClientRect();
+  if (Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) < 90) dodge();
+});
+
+yes.addEventListener("click", () => {
+  no.style.display = "none";
+  $("askBlock").parentElement.classList.add("answered");
+  confetti(220);
+});
+</script>
+</body>
+</html>
